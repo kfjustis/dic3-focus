@@ -8,3 +8,7 @@ This program requires an installation of Python 3.
 Open the project directory through command line. Then,
 run the command "~$ python3 main.py -r [reconstruction levels]"
 
+## Changelog
+### v0.1 - 2/21/2017
+* Initialized the repo from dic3 and updated README
+
