@@ -1,4 +1,4 @@
-# dic3
+# dic3-focus
 Program that calculates the optimum distortion and bitrate from a random Gaussian input using the Lloyd-Max algorithm.
 
 Written in Python.
