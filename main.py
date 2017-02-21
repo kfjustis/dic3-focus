@@ -4,81 +4,49 @@ import numpy
 import matplotlib.pyplot as plt
 
 def main(argv):
-  inputFile = ""
-  outputFile = ""
   numLevels = ""
 
   # load file with command line args
   try:
-    #opts, args = getopt.getopt(argv, "hi:o:", ["ifile=","ofile="])
-    opts, args = getopt.getopt(argv, "hi:o:r:")
+    opts, args = getopt.getopt(argv, "hr:")
   except getopt.GetoptError:
-    print("main.py -i <input file> -o <output file> -r <num levels>")
+    print("main.py -r <num levels>")
     sys.exit(2)
 
   for opt, arg in opts:
     if opt == "-h": # help
-      print("main.py -i <input file> -o <output file> -r <num levels>")
+      print("main.py -r <num levels>")
       sys.exit()
-    elif opt in ("-i"):
-      inputFile = arg
-    elif opt in ("-o"):
-      outputFile = arg
     elif opt in ("-r"):
       numLevels = arg
 
-  
-  # load image as array
-  imgArray = quantize.load_image_as_array(inputFile)
-  print(imgArray)
-  print(imgArray.shape)
-  print()
-
-  # reshape array from 2D to 1D
-  imgArray = imgArray.flatten()
-
-  # determine length (THIS IS THE DENOM FOR PROBABILITY)
-  imgLength = len(imgArray)
-  print("length: ", imgLength)
-  print()
-  
-  '''
+  # create gaussian distribution
   mu, sigma = 0, 10 # want variance to be 100
-  arr = numpy.random.normal(mu, sigma, 1000)
-  '''
-  
-  # determine frequencies
-  i = 0
-  freqArray = [1] * 256
-  while (i < len(imgArray)):
-    freqArray[imgArray[i]] += 1
-    i += 1
+  dist = numpy.random.normal(mu, sigma, 1000)
+  plt.hist(dist, 100, normed=True, align='mid')
 
-  # determine probabilities
-  probArray = [f / imgLength for f in freqArray]
-  
-  # plot probabilities
-  axes = plt.gca()
-  axes.set_xlim([0, 255])
-  plt.plot(probArray)
-  
+  # sort, then determine data length
+  dist.sort()
+  length = dist[len(dist)-1] - dist[0]
+
   # create reconstruction level array
-  recon = quantize.init_recon_array_random(256, numLevels)
+  recon = quantize.init_recon_array_random(length, numLevels)
+  
   if (recon == -1):
     print("Invalid args for reconstruction array\n")
     sys.exit()
-  
+
   # plot reconstruction lines
   i = 0
   while (i < len(recon)):
     if (recon[i] == 1):
-      plt.axvline(i, color='red')
+      plt.axvline(i + int(dist[0]), color='red')
     i += 1
 
   # Labels and show graph
-  plt.xlabel('Pixel value')
+  plt.xlabel('Values')
   plt.ylabel('Probability')
-  plt.title('Probability of Pixel Values')
+  plt.title('Quantization of Gaussian Input')
   plt.show()
 
 if __name__ == "__main__":

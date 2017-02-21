@@ -29,7 +29,8 @@ reconstruction levels
            -1 on error
 '''
 def init_recon_array_random(length, numLevels):
-        recon = [0] * length
+        # stores the reconstruction points
+        recon = [0] * int(length)
 
         # error check params
         if (len(recon) == 0 or length < 0):
@@ -42,6 +43,9 @@ def init_recon_array_random(length, numLevels):
         i = 0
         while (i < len(recon)):
                 shouldPlace = numpy.random.randint(0, length)
+                #shouldPlace = numpy.random.randint(start, end)
+                
+                # make sure we place all recon points
                 if (int(shouldPlace) <= int(numLevels)):
                         if ((int(numLevels) - 1) >= 0 and recon[i] != 1):
                                 numLevels = int(numLevels) - 1
